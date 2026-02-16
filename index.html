@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root {
     --navy: #1a2744;
@@ -430,6 +431,59 @@
   .copy-btn:active { transform: translateY(0); }
   .copy-btn.copied { background: #2e7d5b; }
 
+  /* ── Download Buttons ── */
+  .download-section {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .download-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--subtle);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .download-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    background: var(--white);
+    color: var(--navy);
+    border: 1.5px solid #d0d4dc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .download-btn:hover {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+    transform: translateY(-1px);
+  }
+  .download-btn:active { transform: translateY(0); }
+  .download-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .download-btn.downloading {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+
   /* ── Animations ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -586,6 +640,17 @@
       width: 100%;
       max-width: 300px;
     }
+
+    .download-section {
+      gap: 10px;
+    }
+
+    .download-btn {
+      font-size: 9px;
+      padding: 12px 18px;
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   /* Extra small screens */
@@ -657,6 +722,11 @@
     </div>
   </div>
   <div class="flip-hint animate-in delay-3" onclick="flipCard()">&#8635; Tap card to flip</div>
+  <div class="download-section animate-in delay-3">
+    <div class="download-label">Export for Print (300 DPI)</div>
+    <button class="download-btn" id="dlFront" onclick="downloadCard('front')">&#8681; Front</button>
+    <button class="download-btn" id="dlBack" onclick="downloadCard('back')">&#8681; Back</button>
+  </div>
 </div>
 
 <!-- ── EMAIL SIGNATURE ── -->
@@ -715,6 +785,77 @@
 
   function flipCard() {
     document.getElementById('cardFlipper').classList.toggle('flipped');
+  }
+
+  async function downloadCard(face) {
+    var btn = document.getElementById(face === 'front' ? 'dlFront' : 'dlBack');
+    btn.disabled = true;
+    btn.classList.add('downloading');
+    btn.textContent = 'Generating…';
+
+    var container = document.querySelector('.card-container');
+    var flipper = document.getElementById('cardFlipper');
+    var front = document.querySelector('.card-front');
+    var back = document.querySelector('.card-back');
+
+    // Save all current inline styles
+    var saved = {
+      container: container.style.cssText,
+      flipper: flipper.style.cssText,
+      front: front.style.cssText,
+      back: back.style.cssText
+    };
+
+    // Force desktop dimensions and flatten all 3D for capture
+    container.style.perspective = 'none';
+    container.style.width = '700px';
+    container.style.maxWidth = '700px';
+    flipper.style.cssText = 'width:700px;height:400px;position:relative;transform:none;transition:none;transform-style:flat;';
+
+    if (face === 'front') {
+      front.style.cssText = 'position:absolute;width:100%;height:100%;border-radius:12px;overflow:hidden;' +
+        'background:linear-gradient(135deg,#0f1a2e 0%,#1a2744 40%,#243556 100%);' +
+        'display:flex;flex-direction:column;justify-content:center;padding:56px 60px;z-index:2;';
+      back.style.display = 'none';
+    } else {
+      front.style.display = 'none';
+      back.style.cssText = 'position:absolute;width:100%;height:100%;border-radius:12px;overflow:hidden;' +
+        'background:linear-gradient(135deg,#0f1a2e 0%,#1a2744 40%,#243556 100%);' +
+        'display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 60px;z-index:1;transform:none;';
+    }
+
+    var target = face === 'front' ? front : back;
+
+    // Wait for layout to settle
+    await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+
+    try {
+      var canvas = await html2canvas(target, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        width: 700,
+        height: 400
+      });
+
+      var link = document.createElement('a');
+      link.download = 'derrick-rodriguez-card-' + face + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      console.error('Export failed:', err);
+    }
+
+    // Restore everything
+    container.style.cssText = saved.container;
+    flipper.style.cssText = saved.flipper;
+    front.style.cssText = saved.front;
+    back.style.cssText = saved.back;
+
+    btn.disabled = false;
+    btn.classList.remove('downloading');
+    btn.textContent = face === 'front' ? '\u2B07 Front' : '\u2B07 Back';
   }
 
   function copySignature() {
