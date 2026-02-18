@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Derrick Rodriguez – Business Card & Email Signature</title>
+<title>First Health Enrollment – Brand Collateral</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -44,8 +44,44 @@
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--subtle);
-    margin-bottom: 40px;
+    margin-bottom: 32px;
     text-align: center;
+  }
+
+  /* ── Employee Selector ── */
+  .employee-selector {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid var(--gold);
+    box-shadow: 0 4px 16px rgba(201, 169, 110, 0.12);
+  }
+  .employee-btn {
+    padding: 12px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--subtle);
+    border: none;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    position: relative;
+  }
+  .employee-btn:not(:last-child) { border-right: 1px solid rgba(201, 169, 110, 0.3); }
+  .employee-btn.active {
+    background: var(--navy);
+    color: var(--gold-light);
+  }
+  .employee-btn:hover:not(.active) {
+    background: #faf6ee;
+    color: var(--navy);
   }
 
   /* ── Tab Navigation ── */
@@ -158,6 +194,7 @@
     margin-bottom: 16px;
     position: relative;
     z-index: 1;
+    transition: opacity 0.3s ease;
   }
 
   .card-divider {
@@ -246,6 +283,7 @@
     color: var(--silver);
     line-height: 2.2;
     letter-spacing: 0.8px;
+    transition: opacity 0.3s ease;
   }
   .back-info-row a {
     color: var(--silver);
@@ -504,7 +542,17 @@
     .page-title {
       font-size: 11px;
       letter-spacing: 3px;
+      margin-bottom: 24px;
+    }
+
+    .employee-selector {
       margin-bottom: 28px;
+    }
+
+    .employee-btn {
+      padding: 10px 16px;
+      font-size: 9px;
+      letter-spacing: 1.2px;
     }
 
     .tabs {
@@ -682,14 +730,27 @@
       font-size: 9px;
       letter-spacing: 1.2px;
     }
+
+    .employee-btn {
+      padding: 8px 10px;
+      font-size: 8px;
+      letter-spacing: 1px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="page-title animate-in">Derrick Rodriguez — Brand Collateral</div>
+<div class="page-title animate-in" id="pageTitle">First Health Enrollment — Brand Collateral</div>
 
-<div class="tabs animate-in delay-1">
+<!-- ── Employee Selector ── -->
+<div class="employee-selector animate-in delay-1">
+  <button class="employee-btn active" onclick="switchEmployee('derrick')">Derrick</button>
+  <button class="employee-btn" onclick="switchEmployee('javier')">Javier</button>
+  <button class="employee-btn" onclick="switchEmployee('nicolas')">Nicolas</button>
+</div>
+
+<div class="tabs animate-in delay-2">
   <button class="tab active" onclick="showSection('card')">Business Card</button>
   <button class="tab" onclick="showSection('signature')">Email Signature</button>
 </div>
@@ -700,7 +761,7 @@
     <div class="card-flipper" id="cardFlipper" onclick="flipCard()">
       <!-- Front -->
       <div class="card-face card-front">
-        <div class="card-name">DERRICK RODRIGUEZ</div>
+        <div class="card-name" id="cardName">DERRICK RODRIGUEZ</div>
         <div class="card-divider"></div>
         <div class="card-tagline">"Small Group Health Plans Made Simple."</div>
         <div class="card-logo-mark">FHE</div>
@@ -712,8 +773,8 @@
         <div class="back-info">
           <div class="back-info-row">12985 SW 130th Ct. Suite 201</div>
           <div class="back-info-row">Miami, Florida 33186</div>
-          <div class="back-info-row"><a href="tel:7862710208">786-271-0208</a></div>
-          <div class="back-info-row"><a href="mailto:DRodriguez@firsthealthenroll.org">DRodriguez@firsthealthenroll.org</a></div>
+          <div class="back-info-row" id="cardPhone"><a href="tel:7862710208">786-271-0208</a></div>
+          <div class="back-info-row" id="cardEmail"><a href="mailto:DRodriguez@firsthealthenroll.org">DRodriguez@firsthealthenroll.org</a></div>
         </div>
         <div class="back-logo-container">
           <div class="back-logo-text">FHE</div>
@@ -744,12 +805,12 @@
       <table class="sig-table" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
           <td class="sig-left">
-            <div class="sig-name">Derrick Rodriguez</div>
+            <div class="sig-name" id="sigName">Derrick Rodriguez</div>
             <div class="sig-title-text">Small Group Health Plans</div>
           </td>
           <td class="sig-right">
             <div class="sig-company">First Health Enrollment</div>
-            <div class="sig-detail">
+            <div class="sig-detail" id="sigDetail">
               <span class="sig-icon">&#9993;</span><a href="mailto:DRodriguez@firsthealthenroll.org">DRodriguez@firsthealthenroll.org</a><br>
               <span class="sig-icon">&#9742;</span><a href="tel:7862710208">786-271-0208</a><br>
               <span class="sig-icon">&#8962;</span>12985 SW 130th Ct. Suite 201, Miami, FL 33186
@@ -769,8 +830,64 @@
 </div>
 
 <script>
+  // ── Employee Data ──
+  var employees = {
+    derrick: {
+      name: 'Derrick Rodriguez',
+      nameUpper: 'DERRICK RODRIGUEZ',
+      email: 'DRodriguez@firsthealthenroll.org',
+      phone: '786-271-0208',
+      phoneRaw: '7862710208',
+      fileSlug: 'derrick-rodriguez'
+    },
+    javier: {
+      name: 'Javier Hernandez',
+      nameUpper: 'JAVIER HERNANDEZ',
+      email: 'Jhernandez@firsthealthenroll.org',
+      phone: '786-246-2393',
+      phoneRaw: '7862462393',
+      fileSlug: 'javier-hernandez'
+    },
+    nicolas: {
+      name: 'Nicolas Fuentes',
+      nameUpper: 'NICOLAS FUENTES',
+      email: 'nfuentes@firsthealthenroll.org',
+      phone: '305-904-7965',
+      phoneRaw: '3059047965',
+      fileSlug: 'nicolas-fuentes'
+    }
+  };
+
+  var currentEmployee = 'derrick';
+
+  function switchEmployee(key) {
+    currentEmployee = key;
+    var emp = employees[key];
+
+    // Update employee selector buttons
+    document.querySelectorAll('.employee-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelector('.employee-btn[onclick="switchEmployee(\'' + key + '\')"]').classList.add('active');
+
+    // Update business card front
+    document.getElementById('cardName').textContent = emp.nameUpper;
+
+    // Update business card back
+    document.getElementById('cardPhone').innerHTML = '<a href="tel:' + emp.phoneRaw + '">' + emp.phone + '</a>';
+    document.getElementById('cardEmail').innerHTML = '<a href="mailto:' + emp.email + '">' + emp.email + '</a>';
+
+    // Update email signature
+    document.getElementById('sigName').textContent = emp.name;
+    document.getElementById('sigDetail').innerHTML =
+      '<span class="sig-icon">&#9993;</span><a href="mailto:' + emp.email + '">' + emp.email + '</a><br>' +
+      '<span class="sig-icon">&#9742;</span><a href="tel:' + emp.phoneRaw + '">' + emp.phone + '</a><br>' +
+      '<span class="sig-icon">&#8962;</span>12985 SW 130th Ct. Suite 201, Miami, FL 33186';
+
+    // Reset card flip
+    document.getElementById('cardFlipper').classList.remove('flipped');
+  }
+
   function showSection(section) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
     document.getElementById('cardSection').classList.remove('active');
     document.getElementById('signatureSection').classList.remove('active');
 
@@ -788,10 +905,11 @@
   }
 
   async function downloadCard(face) {
+    var emp = employees[currentEmployee];
     var btn = document.getElementById(face === 'front' ? 'dlFront' : 'dlBack');
     btn.disabled = true;
     btn.classList.add('downloading');
-    btn.textContent = 'Generating…';
+    btn.textContent = 'Generating\u2026';
 
     var container = document.querySelector('.card-container');
     var flipper = document.getElementById('cardFlipper');
@@ -840,7 +958,7 @@
       });
 
       var link = document.createElement('a');
-      link.download = 'derrick-rodriguez-card-' + face + '.png';
+      link.download = emp.fileSlug + '-card-' + face + '.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (err) {
@@ -859,28 +977,28 @@
   }
 
   function copySignature() {
-    const sig = document.getElementById('signatureContent');
-    const range = document.createRange();
+    var sig = document.getElementById('signatureContent');
+    var range = document.createRange();
     range.selectNodeContents(sig);
-    const sel = window.getSelection();
+    var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
 
     try {
       document.execCommand('copy');
-      const btn = document.getElementById('copyBtn');
+      var btn = document.getElementById('copyBtn');
       btn.textContent = 'Copied!';
       btn.classList.add('copied');
-      setTimeout(() => {
+      setTimeout(function() {
         btn.textContent = 'Copy Signature HTML';
         btn.classList.remove('copied');
       }, 2000);
     } catch (e) {
-      navigator.clipboard.writeText(sig.innerHTML).then(() => {
-        const btn = document.getElementById('copyBtn');
+      navigator.clipboard.writeText(sig.innerHTML).then(function() {
+        var btn = document.getElementById('copyBtn');
         btn.textContent = 'HTML Copied!';
         btn.classList.add('copied');
-        setTimeout(() => {
+        setTimeout(function() {
           btn.textContent = 'Copy Signature HTML';
           btn.classList.remove('copied');
         }, 2000);
